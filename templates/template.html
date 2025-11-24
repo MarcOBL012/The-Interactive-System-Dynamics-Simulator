@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vensim Web Simulation</title>
+    <link rel="icon" href="{{ url_for('static', filename='ico/icono.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Estilos específicos para la simulación */
+        .sim-panel {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        .graph-wrapper {
+            overflow: hidden; /* Evita desbordes del gráfico */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading">
+        <img class="loading-image img-fluid" src="{{ url_for('static', filename='images/uni.png') }}" alt="Cargando...">
+    </div>
+
+    <div class="d-flex" id="wrapper">
+        <div class="bg-dark border-end d-flex flex-column" id="sidebar-wrapper">
+            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
+                <i class="bi bi-speedometer2 me-2"></i>Grupo 7
+            </div>
+            
+            <div class="list-group list-group-flush my-3">
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold active" onclick="showSection('inicio')">
+                    <i class="bi bi-house-door me-2"></i>Inicio
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text" onclick="showSection('causal')">
+                    <i class="bi bi-diagram-3 me-2"></i>D. Causal
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text" onclick="showSection('forrester')">
+                    <i class="bi bi-diagram-2 me-2"></i>D. Forrester
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text" onclick="showSection('simulacion')">
+                    <i class="bi bi-graph-up-arrow me-2"></i>Simulación
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text" onclick="showSection('completa')">
+                    <i class="bi bi-speedometer me-2"></i>Simulación Completa
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text" onclick="showSection('tablas')">
+                    <i class="bi bi-table me-2"></i>Tablas
+                </a>
+            </div>
+
+            <div class="mt-auto border-top pt-3 pb-4 text-center">
+                <div class="text-white small mb-2">
+                    <i class="bi bi-person-circle me-1"></i>
+                    Usuario: <strong>{{ user_name }}</strong>
+                </div>
+                <a href="/logout" class="btn btn-danger btn-sm w-75">
+                    <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                </a>
+            </div>
+        </div>
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom px-3">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-list fs-3 me-3" id="menu-toggle" style="cursor: pointer;"></i>
+                    <h2 class="fs-4 m-0">Dinámica de Sistemas - Caso Transporte</h2>
+                </div>
+            </nav>
+
+            <div class="container-fluid px-4 py-4">
+                
+                <section id="section-inicio" class="content-section">
+                    <div class="row g-3 my-2">
+                        <div class="col-md-12">
+                            <div class="p-5 bg-white shadow-sm d-flex align-items-center rounded">
+                                <div>
+                                    <h3 class="fs-2">Bienvenido al Simulador</h3>
+                                    <p class="lead">Modelo de simulación para transporte de carga y logística.</p>
+                                    <hr>
+                                    <p>Utilice el menú lateral para navegar entre los diagramas y la herramienta de simulación.</p>
+                                    <button class="btn btn-primary" onclick="showSection('simulacion')">Ir a Simular</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-causal" class="content-section" style="display: none;">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h4 class="mb-0">Diagrama Causal</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="{{ url_for('static', filename='images/diagrama_causal.png') }}" 
+                                 onerror="this.src='https://placehold.co/800x400?text=Subir+Diagrama+Causal'" 
+                                 class="img-fluid rounded" alt="Diagrama Causal">
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-forrester" class="content-section" style="display: none;">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h4 class="mb-0">Diagrama de Forrester</h4>
+                        </div>
+                        <div class="card-body text-center">
+                             <img src="{{ url_for('static', filename='images/diagrama_forrester.png') }}" 
+                                 onerror="this.src='https://placehold.co/800x400?text=Subir+Diagrama+Forrester'" 
+                                 class="img-fluid rounded" alt="Diagrama Forrester">
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-simulacion" class="content-section" style="display: none;">
+                    
+                    <div id="global-controls" class="card shadow-sm mb-4 sticky-top" style="top: 10px; z-index: 900;">
+                        <div class="card-body py-2">
+                            <div class="row align-items-center justify-content-center">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-primary text-white fw-bold">
+                                            <i class="bi bi-clock-history me-2"></i> Tiempo Global
+                                        </span>
+                                        <input type="number" step="any" min="1" class="form-control" id="global-final-time" value="12" placeholder="Meses">
+                                        <span class="input-group-text">Meses</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="graficos-container">
+                        <div class="row">
+                            {% for nombre_nivel, nivel_data in nivel.items() %}
+                                <div class="col-xl-6 col-lg-12 mb-5">
+                                    <div class="card shadow-sm h-100">
+                                        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                                            <h5 class="m-0 text-primary fw-bold">{{ nivel_data['info']['title'] }}</h5>
+                                            <div>
+                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#tablaModal{{ loop.index }}">
+                                                    <i class="bi bi-table"></i> Datos
+                                                </button>
+                                                <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#simPanel{{ loop.index }}">
+                                                    <i class="bi bi-sliders"></i> Variables
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="card-body">
+                                            <div id="graph-container-{{ nombre_nivel }}" class="text-center graph-wrapper">
+                                                {{ nivel_data['graph']|safe }}
+                                            </div>
+
+                                            <div class="collapse mt-3" id="simPanel{{ loop.index }}">
+                                                <div class="sim-panel border">
+                                                    <h6 class="border-bottom pb-2 fw-bold text-dark">Modificar Variables (Sensibilidad)</h6>
+                                                    
+                                                    <form class="simulation-form" data-target-nivel="{{ nombre_nivel }}">
+                                                        <div class="row">
+                                                            {% for const in constantes %}
+                                                            <div class="col-md-6 mb-2">
+                                                                <label class="form-label small fw-bold text-muted mb-0" title="{{ const.name }}">
+                                                                    {{ const.name }}
+                                                                </label>
+                                                                <input type="number" step="any" 
+                                                                       class="form-control form-control-sm param-input" 
+                                                                       id="input-{{ nombre_nivel }}-{{ loop.index0 }}-{{ loop.index }}" 
+                                                                       name="{{ const.name }}" 
+                                                                       value="{{ const.value }}">
+                                                            </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                        <div class="d-grid gap-2 mt-3">
+                                                            <button type="submit" class="btn btn-success btn-sm">
+                                                                <i class="bi bi-play-fill"></i> Simular Escenario
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal fade" id="tablaModal{{ loop.index }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Datos: {{ nombre_nivel }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table class="table table-sm table-striped text-center">
+                                                        <thead class="table-dark">
+                                                            <tr>
+                                                                <th>{{ nivel_data['info']['nameLabelX'] }}</th>
+                                                                <th>{{ nivel_data['info']['nameLabelY'] }}</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="table-body-{{ nombre_nivel }}">
+                                                        {% for date, value in nivel_data['data'].items() %}
+                                                                <tr>
+                                                                    <td>{{ date }}</td>
+                                                                    <td>{{ "%.2f"|format(value) }}</td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-completa" class="content-section" style="display: none;">
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h3 class="fw-bold text-primary">Simulación Global del Sistema</h3>
+                            <p class="text-muted">Visualice y compare todas las variables del sistema en un solo gráfico.</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-9">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-line"></i> Comportamiento Combinado</span>
+                                    <button id="btn-download-csv" class="btn btn-sm btn-success" disabled onclick="downloadSimulationCSV()">
+                                        <i class="bi bi-file-earmark-spreadsheet-fill me-1"></i>Descargar CSV
+                                    </button>
+                                </div>
+                                <div class="card-body p-1">
+                                    <div id="graph-container-COMPLETA" class="text-center graph-wrapper" style="min-height: 450px;">
+                                        {% if grafica_completa %}
+                                            {{ grafica_completa|safe }}
+                                        {% else %}
+                                            <div class="alert alert-warning m-4">No hay datos suficientes para generar la gráfica global.</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header bg-white fw-bold">
+                                    <i class="bi bi-check-square"></i> Variables Visibles
+                                </div>
+                                <div class="card-body overflow-auto" style="max-height: 500px;">
+                                    <p class="small text-muted mb-2">Marque las variables que desea ver en el gráfico:</p>
+                                    <div class="d-grid gap-2">
+                                        {% if lista_niveles_bd %}
+                                            {% for item in lista_niveles_bd %}
+                                                <div class="form-check form-switch p-2 border rounded bg-light mb-1 d-flex align-items-center justify-content-between">
+                                                    <label class="form-check-label small fw-bold text-truncate" for="check-var-{{ loop.index0 }}" style="max-width: 80%; cursor:pointer;">
+                                                        {{ item[5] }}
+                                                    </label>
+                                                    <input class="form-check-input ms-2 toggle-line-check" type="checkbox" 
+                                                           id="check-var-{{ loop.index0 }}" 
+                                                           data-line-index="{{ loop.index0 }}" 
+                                                           checked 
+                                                           style="border-color: {{ item[6] }}; background-color: {{ item[6] }};">
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-sliders"></i> Panel de Control de Variables</span>
+                                    <span class="badge bg-success">Simulación Global</span>
+                                </div>
+                                <div class="card-body">
+                                    <form class="simulation-form" data-target-nivel="COMPLETA">
+                                        <div class="row align-items-end">
+                                            <div class="col-md-3 mb-3">
+                                                <label class="form-label fw-bold text-danger">Tiempo Final (Meses)</label>
+                                                <input type="number" class="form-control param-input" name="FINAL TIME" value="12">
+                                            </div>
+
+                                            {% for const in constantes %}
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label small fw-bold text-muted">{{ const.name }}</label>
+                                                    <input type="number" step="any" class="form-control form-control-sm param-input" 
+                                                           name="{{ const.name }}" value="{{ const.value }}">
+                                                </div>
+                                            {% endfor %}
+                                            
+                                            <div class="col-md-3 mb-3 d-grid">
+                                                <button type="submit" class="btn btn-primary btn-lg">
+                                                    <i class="bi bi-play-circle-fill me-2"></i>Simular Todo
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-tablas" class="content-section" style="display: none;">
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h3 class="fw-bold text-primary">Tablas de Datos</h3>
+                            <p class="text-muted">Visualización detallada de los datos de simulación para todas las variables del sistema.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        {% for nombre_nivel, nivel_data in nivel.items() %}
+                            <div class="col-lg-6 col-md-12 mb-4">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                                        <h5 class="m-0 font-weight-bold text-primary">
+                                            <i class="bi bi-table me-2"></i>{{ nivel_data['info']['title'] }}
+                                        </h5>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                            <table class="table table-striped table-hover mb-0 text-center table-sm">
+                                                <thead class="table-dark sticky-top">
+                                                    <tr>
+                                                        <th>{{ nivel_data['info']['nameLabelX'] }} (Tiempo)</th>
+                                                        <th>{{ nivel_data['info']['nameLabelY'] }} (Valor)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for date, value in nivel_data['data'].items() %}
+                                                        <tr>
+                                                            <td>{{ date }}</td>
+                                                            <td>{{ "%.2f"|format(value) }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

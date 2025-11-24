@@ -1,0 +1,286 @@
+{UTF-8}
+Diferencia cisternas=Cantidad cisternas deseados-Cisternas
+	~	
+	~		|
+
+tasa Venta=0.01
+	~	
+	~		|
+
+Cisternas= INTEG (Compras-Obsolencia-Ventas,
+		10)
+	~	
+	~		|
+
+Cisterna'=INTEGER ( Cisternas)
+	~	
+	~		|
+
+Tasa obsolencia=0.002
+	~	
+	~		|
+
+Obsolencia=Tasa obsolencia*Cisternas
+	~	
+	~		|
+
+Compras=Tasa Compra*Diferencia cisternas
+	~	
+	~		|
+
+Ventas=tasa Venta*Cisternas
+	~	
+	~		|
+
+Tasa Compra=0.001
+	~	
+	~		|
+
+Aumento en desarrollo tecnologico y operativo=Diferencia operaciones*Tasa aumento
+	~	
+	~		|
+
+Cantidad cisternas deseados=Tasa cisternas*Demanda a la empresa
+	~	
+	~		|
+
+Captacion por cliente actual=0.045
+	~	
+	~		|
+
+Demanda a la empresa=Clientes*Demanda por cliente
+	~	
+	~		|
+
+Clientes= INTEG (Clientes actuales-Clientes salientes,
+		100)
+	~	
+	~		|
+
+Clientes actuales=INTEGER (Clientes captados por difusion+Clientes captados por publicidad boca a boca\
+		)
+	~	
+	~		|
+
+Clientes captados por difusion=Clientes potenciales*Efectividad por difusion*Gastos por difusion\
+		/100
+	~	
+	~		|
+
+Clientes captados por publicidad boca a boca=Captacion por cliente actual*Clientes
+	~	
+	~		|
+
+Clientes potenciales= INTEG (Clientes salientes-Clientes actuales,
+		100)
+	~	
+	~		|
+
+Clientes salientes=INTEGER (Clientes*Tiempo de permanencia promedio)
+	~	
+	~		|
+
+Tiempo de permanencia promedio=0.069999
+	~	
+	~		|
+
+Diferencia operaciones=Control de operaciones deseado-Control de operaciones
+	~	
+	~		|
+
+Efectividad por difusion=0.003
+	~	
+	~		|
+
+Control de operaciones=1+Inversion en desarrollo tecnologico y operativo/1000
+	~	
+	~		|
+
+Control de operaciones deseado=200
+	~	
+	~		|
+
+Ingreso por venta=1000*Ventas
+	~	
+	~		|
+
+Demanda por cliente=3
+	~	
+	~		|
+
+Tasa aumento=0.12
+	~	
+	~		|
+
+Tasa cisternas=0.05
+	~	
+	~		|
+
+Inversion en desarrollo tecnologico y operativo= INTEG (Aumento en desarrollo tecnologico y operativo\
+		,
+		1200)
+	~	
+	~		|
+
+Gastos por difusion=1000
+	~	
+	~		|
+
+Presupuesto disponible=Ingreso por venta+Inversion total en desarrollo tecnologico y operativo
+	~	
+	~		|
+
+Inversion total en desarrollo tecnologico y operativo=Aumento en desarrollo tecnologico y operativo
+	~	
+	~		|
+
+********************************************************
+	.Control
+********************************************************~
+		Simulation Control Parameters
+	|
+
+FINAL TIME  = 12
+	~	Month
+	~	The final time for the simulation.
+	|
+
+INITIAL TIME  = 0
+	~	Month
+	~	The initial time for the simulation.
+	|
+
+SAVEPER  = 
+        TIME STEP
+	~	Month [0,?]
+	~	The frequency with which output is stored.
+	|
+
+TIME STEP  = 1
+	~	Month [0,?]
+	~	The time step for the simulation.
+	|
+
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*View 1
+$-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,86,2
+10,1,Cisternas,976,456,46,50,3,3,0,0,-1,1,0,0,0,0,0,0,0,0
+12,2,48,1295,408,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,3,5,1,100,0,45,22,0,192,0,-1--1--1,,1|(1087,408)|
+1,4,5,2,4,0,45,22,0,192,0,-1--1--1,,1|(1224,408)|
+11,5,0,1158,408,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,6,Ventas,1158,426,32,10,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,7,48,1309,501,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,8,10,1,100,0,45,22,0,192,0,-1--1--1,,1|(1091,501)|
+1,9,10,7,4,0,45,22,0,192,0,-1--1--1,,1|(1236,501)|
+11,10,0,1167,501,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,11,Obsolencia,1167,520,40,11,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,12,Tasa Compra,744,384,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,13,Clientes potenciales,-860,743,46,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,14,Clientes,-300,984,46,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,15,17,14,100,0,0,22,0,192,0,-1--1--1,,1|(-300,735)|
+1,16,17,13,4,0,0,22,0,192,0,-1--1--1,,1|(-661,735)|
+11,17,0,-501,735,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,18,Clientes salientes,-501,769,65,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,19,21,13,100,0,0,22,0,192,0,-1--1--1,,1|(-860,986)|
+1,20,21,14,4,0,0,22,0,192,0,-1--1--1,,1|(-526,986)|
+11,21,0,-714,986,8,6,33,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,22,Clientes actuales,-714,1018,63,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,23,Clientes captados por difusion,-1136,1117,66,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,24,Gastos por difusion,-868,1193,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,25,Efectividad por difusion,-1060,1337,57,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,26,Clientes captados por publicidad boca a boca,-418,1161,74,36,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,27,Captacion por cliente actual,-221,1321,53,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,28,Demanda por cliente,-116,1148,52,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,29,Demanda a la empresa,-77,973,53,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,30,Tasa cisternas,-17,829,54,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,31,Cantidad cisternas deseados,-45,689,69,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,32,Tiempo de permanencia promedio,-383,571,51,36,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,33,Diferencia cisternas,-73,542,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,34,13,23,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,35,24,23,1,0,0,0,0,192,0,-1--1--1,,1|(-1010,1193)|
+1,36,25,23,1,0,0,0,0,192,0,-1--1--1,,1|(-1165,1242)|
+1,37,27,26,1,0,0,0,0,192,0,-1--1--1,,1|(-345,1283)|
+1,38,28,29,1,0,0,0,0,192,0,-1--1--1,,1|(-11,1070)|
+1,39,14,29,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,40,14,26,1,0,0,0,0,192,0,-1--1--1,,1|(-269,1070)|
+1,41,29,31,1,0,0,0,0,192,0,-1--1--1,,1|(-123,795)|
+1,42,30,31,1,0,0,0,0,192,0,-1--1--1,,1|(24,758)|
+1,43,31,33,1,0,0,0,0,192,0,-1--1--1,,1|(-111,595)|
+10,44,Inversion en desarrollo tecnologico y operativo,2577,779,84,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,45,48,2149,781,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,46,48,45,100,0,0,22,0,192,0,-1--1--1,,1|(2239,781)|
+1,47,48,44,4,0,0,22,0,192,0,-1--1--1,,1|(2412,781)|
+11,48,0,2326,781,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,49,Aumento en desarrollo tecnologico y operativo,2326,815,83,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,50,Control de operaciones,2321,536,47,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,51,Tasa aumento,2082,648,54,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,52,Diferencia operaciones,2445,997,47,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,53,Control de operaciones deseado,2344,1162,78,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,54,Presupuesto disponible,2069,1079,48,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,55,Inversion total en desarrollo tecnologico y operativo,2169,919,86,36,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,56,Ingreso por venta,1927,816,65,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,57,50,52,1,0,0,0,0,192,0,-1--1--1,,1|(2740,735)|
+1,58,44,50,1,0,0,0,0,192,0,-1--1--1,,1|(2509,618)|
+1,59,52,48,1,0,0,0,0,192,0,-1--1--1,,1|(2463,862)|
+1,60,53,52,1,0,0,0,0,192,0,-1--1--1,,1|(2470,1111)|
+1,61,48,55,1,0,0,0,0,192,0,-1--1--1,,1|(2342,880)|
+1,62,55,54,1,0,0,0,0,192,0,-1--1--1,,1|(2163,1051)|
+1,63,56,54,1,0,0,0,0,192,0,-1--1--1,,1|(1975,957)|
+1,64,51,48,1,0,0,0,0,192,0,-1--1--1,,1|(2254,685)|
+1,65,5,56,1,0,0,0,0,192,0,-1--1--1,,1|(1612,273)|
+1,66,26,21,1,0,0,0,0,192,0,-1--1--1,,1|(-549,1045)|
+1,67,23,21,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,68,14,17,1,0,0,0,0,192,0,-1--1--1,,1|(-288,652)|
+1,69,32,17,1,0,0,0,0,192,0,-1--1--1,,1|(-497,613)|
+12,70,48,701,473,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,71,73,70,100,0,0,22,0,192,0,-1--1--1,,1|(701,464)|
+1,72,73,1,4,0,0,22,0,192,0,-1--1--1,,1|(878,464)|
+11,73,0,820,464,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,74,Compras,820,498,46,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,75,12,73,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,76,33,73,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,77,1,33,1,0,0,0,0,192,0,-1--1--1,,1|(609,626)|
+1,78,1,10,1,0,0,0,0,192,0,-1--1--1,,1|(1098,461)|
+10,79,Tasa obsolencia,1292,638,60,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,80,tasa Venta,1117,291,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,81,80,5,1,0,0,0,0,192,0,-1--1--1,,1|(1133,362)|
+1,82,79,10,1,0,0,0,0,192,0,-1--1--1,,1|(1170,580)|
+1,83,1,5,1,0,0,0,0,192,0,-1--1--1,,1|(1080,359)|
+10,84,Cisterna',909,356,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,85,1,84,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+///---\\\
+:L<%^E!@
+1:vasss.vdfx
+4:Time
+5:Tasa Compra
+9:vasss
+19:86,0
+24:0
+25:12
+26:12
+23:0
+15:0,0,0,0,0,0
+27:8,
+34:0,
+42:0
+72:0
+73:0
+95:0
+96:0
+97:0
+77:0
+78:0
+102:1
+93:0
+94:0
+92:0
+91:0
+90:0
+87:0
+75:
+43:
+103:8,8,8,3,8
+105:0,0,0,0,0,0,0,0,0,0
+104:Vensim Sans|12||0-0-0|0-0-0|-1--1--1|0-0-255|192-192-192|-1--1--1
