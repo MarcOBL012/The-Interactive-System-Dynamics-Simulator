@@ -49,5 +49,43 @@ Follow these steps to get the project running on your local machine.
 
 ### 1. Clone the repository
 ```bash
-git clone [https://github.com/your-username/sysdyn-web.git](https://github.com/your-username/sysdyn-web.git)
-cd sysdyn-web
+git clone https://github.com/MarcOBL012/The-Interactive-System-Dynamics-Simulator.git
+cd The-Interactive-System-Dynamics-Simulator
+```
+### 2. Set up the Virtual Environment (Optional but Recommended)
+```bash
+python -m venv venv
+# Windows
+venv\Scripts\activate
+# Mac/Linux
+source venv/bin/activate
+```
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+### 4. Database Configuration
+```bash
+APP_NAME=VensimWeb
+APP_URL_VENSIM=http://localhost/assets/vensim/document.mdl
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=vensimweb
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
+
+### 5. Run the Application
+```bash
+python app.py
+```
+
+## 📬 Contact
+If you use or extend this project, please add a note in the README or contact:
+
+Marco Obispo — marco.obispo.l@uni.pe
+
+## 📄 License
+This project is licensed under the MIT License.
+
